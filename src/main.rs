@@ -1,15 +1,13 @@
+use chrono::Utc;
 use clap::{Parser, Subcommand};
 use color_eyre::Result;
 use dapplication::interactors::terminal_interactor::TerminalInteractor;
-use ddomain::{
-    entites::table_colors::TableColors, repositories::ticket_repository::TicketRepository,
-};
 use dinfrastructure::ticket_repository_impl::TicketRepositoryImpl;
 use dpresentation::{
     controllers::terminal_controller::TerminalController,
-    presenters::ratatui_presenter::RatatuiPresenter,
+    presenters::ratatui_presenter::RatatuiPresenter, table_colors::TableColors,
 };
-use std::path::Path;
+use std::{fs, path::Path};
 
 #[derive(Parser)]
 #[command(name = "Digger")]
@@ -28,50 +26,66 @@ enum Commands {
 
 fn main() -> Result<()> {
     color_eyre::install()?;
+    Cli::try_parse()?.command.execute()
+}
 
-    let cli = Cli::try_parse()?;
+trait Execute {
+    fn execute(self) -> Result<()>;
+}
 
-    match cli.command {
-        Commands::New { file_name } => {
-            let file_path = if Path::new(&file_name).extension().is_some() {
-                file_name
-            } else {
-                format!("{}.toml", file_name)
-            };
-
-            let repository: Box<dyn TicketRepository> =
-                Box::new(TicketRepositoryImpl::new(file_path.clone()));
-
-            // ファイルが存在しない場合、リポジトリ側でファイルを生成
-            repository.ensure_file_exists_with_template()?;
-
-            println!("新しいファイルが生成されました: {}", file_path);
+impl Execute for Commands {
+    fn execute(self) -> Result<()> {
+        match self {
+            Commands::New { file_name } => create_new_file(&file_name),
+            Commands::Run { file_name } => run_terminal(&file_name),
         }
-        Commands::Run { file_name } => {
-            let file_path = if Path::new(&file_name).extension().is_some() {
-                file_name
-            } else {
-                format!("{}.toml", file_name)
-            };
+    }
+}
 
-            let repository = TicketRepositoryImpl::new(file_path.clone());
-            let presenter = RatatuiPresenter::new(TableColors::new());
+/// Creates a new TOML file with predefined content
+fn create_new_file(file_name: &str) -> Result<()> {
+    let file_path = ensure_toml_extension(file_name);
 
-            // ファイルが存在しない場合、リポジトリ側でファイルを生成
-            repository.ensure_file_exists_with_template()?;
-
-            // TerminalInteractorを使ってTerminalControllerを生成
-            let terminal_interactor = TerminalInteractor::new(repository, presenter)?;
-
-            // エラー処理が成功した場合にのみTerminalControllerを作成
-            let terminal_controller = TerminalController::new(terminal_interactor);
-
-            // ターミナルコントローラの実行
-            terminal_controller.run(ratatui::init())?;
-
-            ratatui::restore();
-        }
+    if Path::new(&file_path).exists() {
+        println!("Warning: File '{}' already exists.", file_path);
+    } else {
+        let now = Utc::now().to_rfc3339();
+        let content = format!(
+            r#"
+[[ticket_data]]
+id = "000"
+level = "One"
+title = "No Issues"
+status = "Pending"
+created_at = "{}"
+"#,
+            now
+        );
+        fs::write(&file_path, content)?;
+        println!("New file created: {}", file_path);
     }
 
     Ok(())
+}
+
+/// Runs the terminal controller
+fn run_terminal(file_name: &str) -> Result<()> {
+    let file_path = ensure_toml_extension(file_name);
+
+    let repository = TicketRepositoryImpl::new(file_path.clone());
+    let presenter = RatatuiPresenter::new(TableColors::new());
+
+    TerminalController::new(TerminalInteractor::new(repository, presenter)?).run(ratatui::init())?;
+
+    ratatui::restore();
+    Ok(())
+}
+
+/// Ensures the file name has a .toml extension
+fn ensure_toml_extension(file_name: &str) -> String {
+    if Path::new(file_name).extension().is_some() {
+        file_name.to_string()
+    } else {
+        format!("{}.toml", file_name)
+    }
 }

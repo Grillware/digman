@@ -1,14 +1,15 @@
 use dapplication::{
     dtos::ticket_dto::TicketDTO, output_ports::terminal_output_port::TerminalOutputPort,
 };
-use ddomain::entites::table_colors::TableColors;
 use ratatui::{
     Frame,
-    layout::{Constraint, Margin, Rect},
-    style::{Color, Style},
-    widgets::{
-        Block, Borders, Cell, Paragraph, Row, Scrollbar, ScrollbarOrientation, Table, TableState,
-    },
+    layout::{Margin, Rect},
+    widgets::{Scrollbar, ScrollbarOrientation, TableState},
+};
+
+use crate::{
+    table_colors::TableColors,
+    views::{view_edit_form::view_edit_form, view_footer::view_footer, view_table::view_table},
 };
 
 pub struct RatatuiPresenter {
@@ -35,97 +36,22 @@ impl TerminalOutputPort for RatatuiPresenter {
         selected_index: Option<usize>,
         tickets: &Vec<TicketDTO>,
     ) {
-        let header_style = Style::default().fg(Color::White).bg(Color::Blue);
-        let header = Row::new(
-            [
-                "ID",
-                "Level",
-                "Title",
-                "Status",
-                "Created At",
-                "Resolved At",
-            ]
-            .iter()
-            .map(|&s| Cell::from(s)),
-        )
-        .style(header_style)
-        .height(1);
-
-        let rows: Vec<Row> = tickets
-            .iter()
-            .enumerate()
-            .map(|(i, ticket)| {
-                let row_style = if selected_index == Some(i) {
-                    Style::default()
-                        .fg(self.table_colors.selected_row_style_fg)
-                        .bg(self.table_colors.header_bg)
-                } else if i % 2 == 0 {
-                    Style::default()
-                        .fg(self.table_colors.row_fg)
-                        .bg(self.table_colors.normal_row_color)
-                } else {
-                    Style::default()
-                        .fg(self.table_colors.row_fg)
-                        .bg(self.table_colors.alt_row_color)
-                };
-
-                Row::new([
-                    Cell::from(ticket.id.as_str()),
-                    Cell::from(ticket.level.as_str()),
-                    Cell::from(ticket.title.as_str()),
-                    Cell::from(ticket.status.as_str()),
-                    Cell::from(ticket.created_at.to_rfc3339()),
-                    Cell::from(
-                        ticket
-                            .resolved_at
-                            .map(|dt| dt.to_rfc3339())
-                            .unwrap_or_else(|| "".to_string()),
-                    ),
-                ])
-                .style(row_style)
-            })
-            .collect();
-
-        let widths = vec![
-            Constraint::Length(10),
-            Constraint::Length(10),
-            Constraint::Length(30),
-            Constraint::Length(15),
-            Constraint::Length(25),
-            Constraint::Length(25),
-        ];
-
-        frame.render_stateful_widget(
-            Table::new(std::iter::once(header).chain(rows), &widths)
-                .block(Block::default().borders(Borders::ALL).title("Ticket List")),
+        view_table(
+            frame,
             area,
-            &mut self.state
+            selected_index,
+            tickets,
+            &self.table_colors,
+            &mut self.state,
         );
     }
 
     fn draw_footer(&self, frame: &mut Frame, area: Rect) {
-        let footer_text = "(q) Exit | (k) Up | (j) Down | (l) Edit Mode";
-        frame.render_widget(
-            Paragraph::new(footer_text)
-                .style(Style::default().fg(Color::White))
-                .block(
-                    Block::default()
-                        .borders(Borders::ALL)
-                        .title("Control Guide"),
-                ),
-            area,
-        );
+        view_footer(frame, area);
     }
 
     fn draw_edit_form(&self, frame: &mut Frame, area: Rect, selected_ticket: Option<&str>) {
-        let form_text = match selected_ticket {
-            Some(ticket) => format!("Selected Ticket: {}", ticket),
-            None => "Edit Mode: No ticket selected.".to_string(),
-        };
-
-        let paragraph = Paragraph::new(form_text)
-            .block(Block::default().borders(Borders::ALL).title("Edit Screen"));
-        frame.render_widget(paragraph, area);
+        view_edit_form(frame, area, selected_ticket);
     }
 
     fn next_row(&mut self, items_len: usize) {

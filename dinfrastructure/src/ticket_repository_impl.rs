@@ -5,7 +5,6 @@ use ddomain::entites::ticket::Ticket;
 use ddomain::repositories::ticket_repository::TicketRepository;
 use serde::Deserialize;
 use std::fs;
-use std::path::Path;
 use std::sync::{Arc, RwLock};
 use toml;
 
@@ -55,15 +54,5 @@ impl TicketRepository for TicketRepositoryImpl {
             // キャッシュが既にある場合、それを返す
             Ok(cache.clone())
         }
-    }
-    fn ensure_file_exists_with_template(&self) -> Result<()> {
-        let path = Path::new(&self.file_path);
-
-        // ファイルが存在しない場合にエラーを返す
-        if !path.exists() {
-            return Err(DomainError::FileNotFound(self.file_path.clone()).into());
-        }
-
-        Ok(())
     }
 }
