@@ -1,3 +1,5 @@
+use std::fmt;
+
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize, Default, Clone, PartialEq)]
@@ -28,5 +30,17 @@ impl From<TicketStatus> for String {
             TicketStatus::Resolved => "Resolved".to_string(),
             TicketStatus::Canceled => "Canceled".to_string(),
         }
+    }
+}
+
+impl fmt::Display for TicketStatus {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let status_str = match self {
+            TicketStatus::Pending => "Pending",
+            TicketStatus::Wip => "Wip",
+            TicketStatus::Resolved => "Resolved",
+            TicketStatus::Canceled => "Canceled",
+        };
+        write!(f, "{}", status_str)
     }
 }

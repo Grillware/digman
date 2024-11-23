@@ -10,14 +10,14 @@ use toml;
 
 pub struct TicketRepositoryImpl {
     file_path: String,
-    ticket_cache: Arc<RwLock<Vec<Ticket>>>, // チケットキャッシュ
+    ticket_cache: Arc<RwLock<Vec<Ticket>>>,
 }
 
 impl TicketRepositoryImpl {
     pub fn new(file_path: String) -> Self {
         Self {
             file_path,
-            ticket_cache: Arc::new(RwLock::new(Vec::new())), // 空のキャッシュで初期化
+            ticket_cache: Arc::new(RwLock::new(Vec::new())),
         }
     }
 
@@ -37,6 +37,19 @@ impl TicketRepositoryImpl {
         let ticket_collection: TicketCollection = self.deserial_toml_file::<TicketCollection>()?;
         Ok(ticket_collection.ticket_data)
     }
+
+    pub fn count_tickets(&self) -> Result<usize, DomainError> {
+        let cache = self.ticket_cache.read().unwrap();
+        if cache.is_empty() {
+            // キャッシュが空ならファイルから読み込んでその件数を返す
+            drop(cache);
+            let tickets = self.load_tickets_from_file()?;
+            Ok(tickets.len())
+        } else {
+            // キャッシュにデータがあれば、キャッシュの件数を返す
+            Ok(cache.len())
+        }
+    }
 }
 
 impl TicketRepository for TicketRepositoryImpl {
@@ -51,7 +64,6 @@ impl TicketRepository for TicketRepositoryImpl {
             *cache = tickets.clone(); // チケットをキャッシュに保存
             Ok(tickets)
         } else {
-            // キャッシュが既にある場合、それを返す
             Ok(cache.clone())
         }
     }

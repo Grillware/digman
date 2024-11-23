@@ -1,4 +1,5 @@
 use serde::{Deserialize, Serialize};
+use std::fmt;
 
 #[derive(Debug, Serialize, Deserialize, Default, Clone)]
 pub enum TicketLevel {
@@ -35,5 +36,19 @@ impl From<TicketLevel> for String {
             TicketLevel::Eight => "Eight".to_string(),
             TicketLevel::Thirteen => "Thirteen".to_string(),
         }
+    }
+}
+
+impl fmt::Display for TicketLevel {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let level_str = match self {
+            TicketLevel::One => "One",
+            TicketLevel::Two => "Two",
+            TicketLevel::Three => "Three",
+            TicketLevel::Five => "Five",
+            TicketLevel::Eight => "Eight",
+            TicketLevel::Thirteen => "Thirteen",
+        };
+        write!(f, "{}", level_str)
     }
 }

@@ -5,8 +5,12 @@ use ratatui::{
     widgets::{Block, Borders, Paragraph},
 };
 
-pub fn view_footer(frame: &mut Frame, area: Rect) {
-    let footer_text = "(q) Exit | (k) Up | (j) Down | (l) Edit Mode";
+pub fn view_footer(frame: &mut Frame, area: Rect, mode: String) {
+    let footer_text = format!(
+        "Mode: {} | (q) Exit | (k) Up | (j) Down | (l) Inquery Mode",
+        mode
+    );
+
     frame.render_widget(
         Paragraph::new(footer_text)
             .style(Style::default().fg(Color::White))

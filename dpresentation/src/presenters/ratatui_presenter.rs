@@ -1,3 +1,8 @@
+use crate::views::{view_ticket_detail::view_ticket_detail, view_ticket_form::view_ticket_form};
+use crate::{
+    table_colors::TableColors,
+    views::{view_footer::view_footer, view_table::view_table},
+};
 use dapplication::{
     dtos::ticket_dto::TicketDTO, output_ports::terminal_output_port::TerminalOutputPort,
 };
@@ -6,11 +11,7 @@ use ratatui::{
     layout::{Margin, Rect},
     widgets::{Scrollbar, ScrollbarOrientation, TableState},
 };
-
-use crate::{
-    table_colors::TableColors,
-    views::{view_edit_form::view_edit_form, view_footer::view_footer, view_table::view_table},
-};
+use tui_textarea::TextArea;
 
 pub struct RatatuiPresenter {
     table_colors: TableColors,
@@ -19,11 +20,11 @@ pub struct RatatuiPresenter {
 }
 
 impl RatatuiPresenter {
-    pub fn new(table_colors: TableColors) -> Self {
+    pub fn new(table_colors: TableColors, content_length: usize) -> Self {
         Self {
             table_colors,
             state: TableState::default().with_selected(0),
-            scroll_state: ratatui::widgets::ScrollbarState::new((23 - 1) * 4),
+            scroll_state: ratatui::widgets::ScrollbarState::new(content_length * 4),
         }
     }
 }
@@ -46,12 +47,22 @@ impl TerminalOutputPort for RatatuiPresenter {
         );
     }
 
-    fn draw_footer(&self, frame: &mut Frame, area: Rect) {
-        view_footer(frame, area);
+    fn draw_footer(&self, frame: &mut Frame, area: Rect, mode: String) {
+        view_footer(frame, area, mode);
     }
 
-    fn draw_edit_form(&self, frame: &mut Frame, area: Rect, selected_ticket: Option<&str>) {
-        view_edit_form(frame, area, selected_ticket);
+    fn draw_ticket_detail(&self, frame: &mut Frame, area: Rect, selected_ticket: TicketDTO) {
+        view_ticket_detail(frame, area, selected_ticket);
+    }
+
+    fn draw_ticket_form(
+        &self,
+        frame: &mut Frame,
+        area: Rect,
+        textarea: &mut TextArea,
+        selected_ticket: TicketDTO,
+    ) {
+        view_ticket_form(frame, area, textarea, selected_ticket);
     }
 
     fn next_row(&mut self, items_len: usize) {
