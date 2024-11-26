@@ -1,6 +1,6 @@
 use chrono::Utc;
 use clap::{Parser, Subcommand};
-use color_eyre::{Result, eyre::Ok};
+use color_eyre::{eyre::Ok, Result};
 use dapplication::interactors::terminal_interactor::TerminalInteractor;
 use dinfrastructure::ticket_repository_impl::TicketRepositoryImpl;
 use dpresentation::{
@@ -10,7 +10,7 @@ use dpresentation::{
 use std::{fs, path::Path};
 
 #[derive(Parser)]
-#[command(name = "Digger")]
+#[command(name = "digman")]
 #[command(version = "1.0")]
 #[command(about = "Manage tickets using a TOML file", long_about = None)]
 struct Cli {
@@ -24,7 +24,8 @@ enum Commands {
     Run { file_name: String },
 }
 
-fn main() -> Result<()> {
+#[tokio::main]
+async fn main() -> Result<()> {
     color_eyre::install()?;
     Cli::try_parse()?.command.execute()
 }

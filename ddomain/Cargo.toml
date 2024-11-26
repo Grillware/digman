@@ -1,7 +1,13 @@
 [package]
 name = "ddomain"
-version = "0.1.0"
+version = "0.7.0"
 edition = "2021"
+description = "Ticket management systems for solo players."
+authors = ["Yu Tokunaga<tokunaga@grill-ware.com>"]
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/4hoe8pow/digman"
+homepage = "https://grill-ware.com"
+documentation = "https://docs.rs/digman"
 
 [dependencies]
 toml = "0.8"
@@ -9,3 +15,4 @@ serde = { workspace = true }
 color-eyre = { workspace = true }
 thiserror = { workspace = true }
 chrono = { workspace = true }
+tokio = { workspace = true }
