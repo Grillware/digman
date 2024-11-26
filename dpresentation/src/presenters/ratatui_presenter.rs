@@ -1,15 +1,20 @@
+use std::collections::HashMap;
+
+use crate::views::view_amend_guide::view_amend_guide;
+use crate::views::view_inquery_guide::view_inquery_guide;
+use crate::views::view_normal_guide::view_normal_guide;
+use crate::views::view_popup::view_popup;
+use crate::views::view_raise_guide::view_raise_guide;
 use crate::views::{view_ticket_detail::view_ticket_detail, view_ticket_form::view_ticket_form};
-use crate::{
-    table_colors::TableColors,
-    views::{view_footer::view_footer, view_table::view_table},
-};
+use crate::{table_colors::TableColors, views::view_table::view_table};
 use dapplication::{
     dtos::ticket_dto::TicketDTO, output_ports::terminal_output_port::TerminalOutputPort,
 };
+use ddomain::value_objects::app_mode::AppMode;
 use ratatui::{
-    Frame,
     layout::{Margin, Rect},
     widgets::{Scrollbar, ScrollbarOrientation, TableState},
+    Frame,
 };
 use tui_textarea::TextArea;
 
@@ -47,8 +52,14 @@ impl TerminalOutputPort for RatatuiPresenter {
         );
     }
 
-    fn draw_footer(&self, frame: &mut Frame, area: Rect, mode: String) {
-        view_footer(frame, area, mode);
+    fn draw_guide(&self, frame: &mut Frame, area: Rect, mode: AppMode) {
+        match mode {
+            AppMode::Normal => view_normal_guide(frame, area),
+            AppMode::Inquery => view_inquery_guide(frame, area),
+            AppMode::Amend => view_amend_guide(frame, area),
+            AppMode::Raise => view_raise_guide(frame, area),
+            AppMode::Notification => {}
+        }
     }
 
     fn draw_ticket_detail(&self, frame: &mut Frame, area: Rect, selected_ticket: TicketDTO) {
@@ -58,11 +69,11 @@ impl TerminalOutputPort for RatatuiPresenter {
     fn draw_ticket_form(
         &self,
         frame: &mut Frame,
-        area: Rect,
-        textarea: &mut TextArea,
+
+        text_areas: HashMap<String, TextArea>,
         selected_ticket: TicketDTO,
     ) {
-        view_ticket_form(frame, area, textarea, selected_ticket);
+        view_ticket_form(frame, text_areas, selected_ticket);
     }
 
     fn next_row(&mut self, items_len: usize) {
@@ -101,5 +112,9 @@ impl TerminalOutputPort for RatatuiPresenter {
             }),
             &mut self.scroll_state,
         );
+    }
+
+    fn notify(&self, frame: &mut Frame, message: String) {
+        view_popup(frame, message);
     }
 }

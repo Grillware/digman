@@ -1,13 +1,17 @@
 use std::fmt;
 
-#[derive(Debug, PartialEq, PartialOrd)]
+#[derive(Debug, PartialEq, PartialOrd, Clone)]
 pub enum AppMode {
     //通常
     Normal,
     //照会
     Inquery,
-    //登録
-    Register,
+    //訂正
+    Amend,
+    //起票
+    Raise,
+    //通知
+    Notification,
 }
 
 impl fmt::Display for AppMode {
@@ -15,7 +19,9 @@ impl fmt::Display for AppMode {
         let mode_str = match self {
             AppMode::Normal => "Normal",
             AppMode::Inquery => "Inquery",
-            AppMode::Register => "Register",
+            AppMode::Amend => "Amend",
+            AppMode::Raise => "Raise",
+            AppMode::Notification => "Notification",
         };
         write!(f, "{}", mode_str)
     }

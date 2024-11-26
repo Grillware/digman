@@ -1,18 +1,15 @@
 use ratatui::{
-    Frame,
     layout::Rect,
     style::{Color, Style},
     widgets::{Block, Borders, Paragraph},
+    Frame,
 };
 
-pub fn view_footer(frame: &mut Frame, area: Rect, mode: String) {
-    let footer_text = format!(
-        "Mode: {} | (q) Exit | (k) Up | (j) Down | (l) Inquery Mode",
-        mode
-    );
+pub fn view_raise_guide(frame: &mut Frame, area: Rect) {
+    let guide_text = format!("Mode: RAISE | (Esc) Inquery Mode | (Ctrl+Return) Confirm");
 
     frame.render_widget(
-        Paragraph::new(footer_text)
+        Paragraph::new(guide_text)
             .style(Style::default().fg(Color::White))
             .block(
                 Block::default()
