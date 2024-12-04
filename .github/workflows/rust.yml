@@ -1,0 +1,57 @@
+name: Crate Publish Workflow
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build_and_publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the code
+      - uses: actions/checkout@v4
+
+      # Install dependencies and build
+      - name: Build
+        run: cargo build --verbose
+
+      # Run tests
+      - name: Run tests
+        run: cargo test --verbose
+
+      # Verify packaging with `cargo package`
+      - name: Verify Package
+        run: cargo package --allow-dirty --workspace
+
+      # Set up Rust nightly
+      - name: Set up Rust nightly
+        uses: dtolnay/rust-toolchain@nightly
+
+      # Publish to crates.io
+      - name: Publish to crates.io
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CRATES_IO_TOKEN }}
+        run: cargo publish --allow-dirty -Z package-workspace
+
+      # Create GitHub release
+      - name: Create GitHub Release
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const version = process.env.GITHUB_REF.split('/').pop();
+            const release = await github.rest.repos.createRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag_name: version,
+              name: `Release ${version}`,
+              body: `Release notes for version ${version}`,
+              draft: false,
+              prerelease: false
+            });
+            console.log(`Release created at ${release.data.html_url}`);
+

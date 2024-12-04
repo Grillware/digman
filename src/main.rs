@@ -10,7 +10,7 @@ use dpresentation::{
 use std::{fs, path::Path};
 
 #[derive(Parser)]
-#[command(name = "Digger")]
+#[command(name = "digman")]
 #[command(version = "1.0")]
 #[command(about = "Manage tickets using a TOML file", long_about = None)]
 struct Cli {

@@ -1,18 +1,23 @@
 [package]
-name = "digger"
-version = "0.6.0"
+name = "digman"
+version = "0.7.0"
 edition = "2021"
+description = "Ticket management systems for solo players."
 authors = ["Yu Tokunaga<tokunaga@grill-ware.com>"]
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/4hoe8pow/digman"
+homepage = "https://grill-ware.com"
+documentation = "https://docs.rs/digman"
 
 [workspace]
 members = [".", "dapplication", "ddomain", "dinfrastructure", "dpresentation"]
 resolver = "2"
 
 [dependencies]
-dpresentation = { path = "./dpresentation" }
-ddomain = { path = "./ddomain" }
-dinfrastructure = { path = "./dinfrastructure" }
-dapplication = { path = "./dapplication" }
+dpresentation = { workspace = true }
+ddomain = { workspace = true }
+dinfrastructure = { workspace = true }
+dapplication = { workspace = true }
 ratatui = { workspace = true }
 serde = { workspace = true }
 chrono = { workspace = true }
@@ -23,6 +28,11 @@ tokio-util = { workspace = true }
 futures = { workspace = true }
 
 [workspace.dependencies]
+ddomain = { version = "0.7.0", path = "./ddomain" }
+dpresentation = { version = "0.7.0", path = "./dpresentation" }
+dinfrastructure = { version = "0.7.0", path = "./dinfrastructure" }
+dapplication = { version = "0.7.0", path = "./dapplication" }
+
 chrono = { version = "0.4", features = ["serde"] }
 ratatui = "0.29"
 serde = { version = "1.0", features = ["derive"] }

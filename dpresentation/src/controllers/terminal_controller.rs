@@ -68,7 +68,7 @@ impl<T: TerminalInputPort> TerminalController<T> {
 
         match (&self.mode, key.code) {
             // 終了
-            (_, KeyCode::Char('q')) if !matches!(self.mode, AppMode::Amend | AppMode::Raise) => {
+            (_, KeyCode::Char('q')) if matches!(self.mode, AppMode::Normal | AppMode::Inquery) => {
                 return Ok(true)
             }
 
