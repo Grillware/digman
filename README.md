@@ -2,6 +2,8 @@
 Digman is a ticket management TUI (Text User Interface) designed for solo developers who are working on personal projects.
 It provides an intuitive and efficient way to manage tasks and keep your development organized.
 
+![outdata](https://github.com/user-attachments/assets/449bbf4a-33c3-4e8d-bc79-ce69ef266f1b)
+
 ## Installation
 To install Digman, run the following command:
 
