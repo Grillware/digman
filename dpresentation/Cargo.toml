@@ -1,6 +1,6 @@
 [package]
 name = "dpresentation"
-version = "0.7.0"
+version = "0.7.1"
 edition = "2021"
 description = "Ticket management systems for solo players."
 authors = ["Yu Tokunaga<tokunaga@grill-ware.com>"]

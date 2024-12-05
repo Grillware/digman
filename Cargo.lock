@@ -291,7 +291,7 @@ dependencies = [
 
 [[package]]
 name = "dapplication"
-version = "0.7.0"
+version = "0.7.1"
 dependencies = [
  "chrono",
  "color-eyre",
@@ -338,7 +338,7 @@ dependencies = [
 
 [[package]]
 name = "ddomain"
-version = "0.7.0"
+version = "0.7.1"
 dependencies = [
  "chrono",
  "color-eyre",
@@ -356,7 +356,7 @@ checksum = "56254986775e3233ffa9c4d7d3faaf6d36a2c09d30b20687e9f88bc8bafc16c8"
 
 [[package]]
 name = "digman"
-version = "0.7.0"
+version = "0.7.1"
 dependencies = [
  "chrono",
  "clap",
@@ -374,7 +374,7 @@ dependencies = [
 
 [[package]]
 name = "dinfrastructure"
-version = "0.7.0"
+version = "0.7.1"
 dependencies = [
  "chrono",
  "color-eyre",
@@ -386,7 +386,7 @@ dependencies = [
 
 [[package]]
 name = "dpresentation"
-version = "0.7.0"
+version = "0.7.1"
 dependencies = [
  "color-eyre",
  "dapplication",
