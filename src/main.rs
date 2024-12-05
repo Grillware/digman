@@ -58,6 +58,7 @@ id = "000"
 level = "One"
 title = "No Issues"
 status = "Pending"
+completion_condition = ""
 created_at = "{}"
 "#,
             now
