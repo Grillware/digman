@@ -28,10 +28,10 @@ tokio-util = { workspace = true }
 futures = { workspace = true }
 
 [workspace.dependencies]
-ddomain = { version = "0.7.1", path = "./ddomain" }
-dpresentation = { version = "0.7.1", path = "./dpresentation" }
-dinfrastructure = { version = "0.7.1", path = "./dinfrastructure" }
-dapplication = { version = "0.7.1", path = "./dapplication" }
+ddomain = { version = "0.7", path = "./ddomain" }
+dpresentation = { version = "0.7", path = "./dpresentation" }
+dinfrastructure = { version = "0.7", path = "./dinfrastructure" }
+dapplication = { version = "0.7", path = "./dapplication" }
 
 chrono = { version = "0.4", features = ["serde"] }
 ratatui = "0.29"
