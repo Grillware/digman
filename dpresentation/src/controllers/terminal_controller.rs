@@ -1,9 +1,9 @@
-use color_eyre::{eyre::Ok, Result};
+use color_eyre::{Result, eyre::Ok};
 use dapplication::input_ports::terminal_input_port::TerminalInputPort;
 use ddomain::value_objects::app_mode::AppMode;
 use ratatui::{
-    crossterm::event::{self, Event, KeyCode, KeyEventKind, KeyModifiers},
     DefaultTerminal,
+    crossterm::event::{self, Event, KeyCode, KeyEventKind, KeyModifiers},
 };
 
 pub struct TerminalController<T: TerminalInputPort> {
@@ -69,7 +69,7 @@ impl<T: TerminalInputPort> TerminalController<T> {
         match (&self.mode, key.code) {
             // 終了
             (_, KeyCode::Char('q')) if matches!(self.mode, AppMode::Normal | AppMode::Inquery) => {
-                return Ok(true)
+                return Ok(true);
             }
 
             // 通常時

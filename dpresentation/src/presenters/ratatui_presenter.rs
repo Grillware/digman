@@ -12,9 +12,9 @@ use dapplication::{
 };
 use ddomain::value_objects::app_mode::AppMode;
 use ratatui::{
+    Frame,
     layout::{Margin, Rect},
     widgets::{Scrollbar, ScrollbarOrientation, TableState},
-    Frame,
 };
 use tui_textarea::TextArea;
 

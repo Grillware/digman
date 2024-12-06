@@ -2,11 +2,11 @@ use std::collections::HashMap;
 
 use dapplication::dtos::ticket_dto::TicketDTO;
 use ratatui::{
+    Frame,
     layout::{Constraint, Layout},
     style::{Color, Modifier, Style},
     text::Span,
     widgets::{Block, Borders, Paragraph},
-    Frame,
 };
 use tui_textarea::TextArea;
 

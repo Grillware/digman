@@ -1,8 +1,8 @@
 use ratatui::{
+    Frame,
     layout::{Alignment, Constraint, Flex, Layout, Rect},
     style::{Color, Style},
     widgets::{Block, Borders, Clear, Paragraph, Wrap},
-    Frame,
 };
 
 fn center(area: Rect, horizontal: Constraint, vertical: Constraint) -> Rect {

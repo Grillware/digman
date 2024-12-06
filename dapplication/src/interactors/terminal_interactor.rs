@@ -1,13 +1,13 @@
 use crate::dtos::ticket_dto::TicketDTO;
 use crate::input_ports::terminal_input_port::TerminalInputPort;
 use crate::output_ports::terminal_output_port::TerminalOutputPort;
-use color_eyre::{eyre::Ok, Result};
+use color_eyre::{Result, eyre::Ok};
 use ddomain::repositories::ticket_repository::TicketRepository;
 use ddomain::{entites::ticket::Ticket, value_objects::app_mode::AppMode};
 use ratatui::{
+    Frame,
     crossterm::event::{self, Event, KeyCode},
     layout::{Constraint, Layout},
-    Frame,
 };
 use tui_textarea::{Input, Key, TextArea};
 
@@ -215,13 +215,14 @@ impl<'a, R: TicketRepository, O: TerminalOutputPort> TerminalInputPort
             dto.resolved_at = *ticket_mut.resolved_at;
         });
 
-        // 保存処理の結果に応じてメッセージを設定
         match self.repository.save(dto.into()) {
             std::result::Result::Ok(_) => {
-                self.notification_message = String::from("保存が成功しました。")
+                self.notification_message =
+                    format!("The save operation was completed successfully.")
             }
-            Err(err) => self.notification_message = format!("保存に失敗しました: {}", err),
+            Err(err) => self.notification_message = format!("The save operation failed: {}", err),
         }
+
         Ok(())
     }
 

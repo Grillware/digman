@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use crate::dtos::ticket_dto::TicketDTO;
 use ddomain::value_objects::app_mode::AppMode;
-use ratatui::{layout::Rect, Frame};
+use ratatui::{Frame, layout::Rect};
 use tui_textarea::TextArea;
 
 pub trait TerminalOutputPort {

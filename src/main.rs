@@ -1,6 +1,6 @@
 use chrono::Utc;
 use clap::{Parser, Subcommand};
-use color_eyre::{eyre::Ok, Result};
+use color_eyre::{Result, eyre::Ok};
 use dapplication::interactors::terminal_interactor::TerminalInteractor;
 use dinfrastructure::ticket_repository_impl::TicketRepositoryImpl;
 use dpresentation::{

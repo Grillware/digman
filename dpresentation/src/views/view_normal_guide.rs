@@ -1,8 +1,8 @@
 use ratatui::{
+    Frame,
     layout::Rect,
     style::{Color, Style},
     widgets::{Block, Borders, Paragraph},
-    Frame,
 };
 
 pub fn view_normal_guide(frame: &mut Frame, area: Rect) {
